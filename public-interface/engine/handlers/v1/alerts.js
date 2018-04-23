@@ -83,6 +83,25 @@ exports.bulkReset = function (req, res, next) {
     });
 };
 
+exports.getUnreadAlerts = function(req, res, next) {
+    var params = {accountId: req.params.accountId};
+    if (req.query.status === 'New') {
+        params.status = req.query.status;
+    } else {
+        err = new Error('status should be New');
+        console.error(err);
+        return;
+    }
+
+    alert.getUnreadAlerts(params, function(err, result){
+        if(!err && result){
+            res.status(httpStatuses.OK.code).send(result);
+        } else {
+            next(err);
+        }
+    });
+};
+
 exports.getAlerts = function(req, res, next) {
     var params = {accountId: req.params.accountId};
     if (req.query.status) {
